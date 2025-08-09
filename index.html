@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>to do list</title>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+   <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+}
+
+.container {
+    margin: 0 20px;
+
+}
+
+
+.main {
+    padding: 30px 0;
+    display: flex;align-items: center;justify-content: center;
+}
+
+.tasks-container {
+  
+  width: 80%;
+   max-width: 800px;
+   
+    background-color: rgb(58, 205, 250);
+    padding: 20px 0 0 0;
+    border-radius: 20px;
+}
+.title{color:aliceblue;font-family: sans-serif;background-color: rgb(58, 205, 250);font-size: 20px;font-weight: 700;text-align: center;text-transform: uppercase;padding-bottom: 10px;}
+.task {
+  
+    min-height: 250px;
+    background: #fff;
+    padding: 15px;
+    color: #000;
+    font-family: sans-serif;
+    font-size: 15px;
+    text-transform: capitalize;
+    line-height: 1.5;
+    border-radius: 20px;
+}
+.Addtask {
+    min-height: 250px;
+    background: #fff;
+    padding: 15px;
+    color: #000;
+    font-family: sans-serif;
+    font-size: 15px;
+    text-transform: capitalize;
+    line-height: 1.5;
+    border-radius: 20px;
+}
+
+.tasker {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+
+.task-list{width: 100%;display: flex;gap: 5px;}
+.task-list-main{width: 100%;display: flex;gap: 5px;}
+
+.task-list input{
+    width: 100%;
+    text-transform: capitalize;
+    outline: none;
+    color: black;
+    font-size: 15px;
+    background-color: aliceblue;
+    border: none;
+    padding: 5px 10px;border-radius: 10px;
+}
+
+.task-list-main input{
+    width: 99%;
+    text-transform: capitalize;
+    outline: none;
+    color: black;
+    font-size: 15px;
+    background-color: aliceblue;
+    border: none;
+    padding: 5px 10px;border-radius: 10px;
+}
+.addtaskbutton{background-color: rgb(58, 205, 250);
+font-size: 12px;
+padding: 10px;
+border-radius: 10px;
+color: white;
+border: none;}
+.addtaskBoxbutton{background-color: rgb(58, 205, 250);
+font-size: 20px;
+padding: 10px;
+border-radius: 10px;
+color: white;
+border: none;}
+
+.deletetaskbutton{background-color: rgb(58, 205, 250);
+font-size: 12px;
+padding: 10px;
+border-radius: 10px;
+color: white;
+border: none;}
+
+.task-title input{
+   padding: 10px;outline: none;border-radius: 10px;
+    border: none;
+    color: black;
+    width: 100%;
+    font-size: 20px;
+    background-color: rgb(58, 205, 250);
+    margin-bottom: 15px;
+}
+.task-title-main{display: flex;align-items: start;gap: 5px;}
+.task-title-main input{
+   padding: 10px;outline: none;border-radius: 10px;
+    border: none;
+    color: black;
+    width: 100%;
+    font-size: 20px;
+    background-color: rgb(58, 205, 250);
+    margin-bottom: 15px;
+}
+.completed{background-color:  rgb(58, 205, 250) !important;
+color: grey !important;}
+
+#task2{position: absolute;z-index: -1;top: 25%;transition:0.9s;}
+#task{position: absolute;z-index: 1;top: 25%;transition: 0.9;}
+
+
+
+   </style>
+</head>
+
+<body>
+  <div class="container">
+    <main class="main" >
+      <div class="tasks-container" id="task">
+        <div class="title">
+          tasks
+        </div>
+        <div class="Addtask">
+          <div class="tasker">
+            <div class="task-title-main" >
+              <input type="text"
+                placeholder="Title" class="input-title">
+                <button class="addtaskBoxbutton"
+                > ×</button>
+              </div>
+            <li class="task-list-main">
+              <input type="text" placeholder="add tasks" id="input"><button class="addtaskbutton">Add</button>
+            </li>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <!-- <script src="script.js"></script> -->
+  <script>
+    
+// Save tasks and title to localStorage
+function saveTasks() {
+    const TITLE = [];
+    TITLE.push({ titleText: document.querySelector('.input-title').value });
+    localStorage.setItem('TITLE', JSON.stringify(TITLE));
+    console.log(TITLE);
+
+    const tasks = [];
+    document.querySelectorAll('.task-list input').forEach(task => {
+        tasks.push({ text: task.value, completed: task.classList.contains('completed') });
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    console.log(tasks);
+}
+
+// Load tasks and title from localStorage on page load
+document.addEventListener('DOMContentLoaded', function loadTasks() {
+    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const savedTitle = JSON.parse(localStorage.getItem('TITLE')) || [];
+    console.log(savedTasks);
+    console.log(savedTitle);
+
+    savedTitle.forEach(T => {
+        document.querySelector('.input-title').value = T.titleText;
+    });
+
+    savedTasks.forEach(task => {
+        const li = document.createElement('li');
+        li.className = 'task-list';
+
+        const input = document.createElement('input');
+        input.value = task.text;
+
+        if (task.completed) {
+            input.classList.add('completed');
+        }
+
+        li.addEventListener('click', () => {
+            input.classList.toggle('completed');
+            saveTasks();
+        });
+
+        const btn = document.createElement('button');
+        btn.className = 'addtaskbutton';
+        btn.textContent = 'Delete';
+        li.appendChild(input);
+        li.appendChild(btn);
+        document.querySelector('.tasker').appendChild(li);
+
+        btn.addEventListener('click', () => {
+            li.remove();
+            saveTasks();
+        });
+
+        // Deleting and completing Alltask
+        document.querySelector('.addtaskBoxbutton').addEventListener('click', () => {
+            const title = document.querySelector('.input-title').value = ''
+           
+          
+            li.remove()
+            saveTasks();
+        })
+
+
+        saveTasks();
+    });
+});
+
+// Function to add a new task
+function taskAdder() {
+    const task = document.getElementById('input').value.trim();
+    if (task) {
+        const li = document.createElement('li');
+        li.className = 'task-list';
+
+        const input = document.createElement('input');
+        input.value = task;
+
+        li.addEventListener('click', () => {
+            input.classList.toggle('completed');
+            saveTasks();
+            // console.log(task.split('\n'));
+            
+        });
+
+        const btn = document.createElement('button');
+        btn.className = 'addtaskbutton';
+        btn.textContent = 'Delete';
+        li.appendChild(input);
+        li.appendChild(btn);
+        document.querySelector('.tasker').appendChild(li);
+
+        btn.addEventListener('click', () => {
+            li.remove();
+            saveTasks();
+        });
+
+        saveTasks();
+        document.getElementById('input').value = "";
+
+
+
+    }
+}
+
+// Event listeners for task addition
+document.querySelector('.addtaskbutton').addEventListener('click', taskAdder);
+document.getElementById('input').addEventListener('keydown', function EnterPressed(e) {
+    if (e.key === 'Enter') {
+        taskAdder();
+    }
+});
+
+// Enable navigation between input fields using Enter
+const inputFields = document.querySelectorAll('input');
+inputFields.forEach((field, index) => {
+    field.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && index < inputFields.length - 1) {
+            e.preventDefault();
+            inputFields[index + 1].focus();
+        }
+    });
+});
+
+
+  </script>
+
+</body>
+
+</html>
+
+
