@@ -112,6 +112,18 @@ document.getElementById('input').addEventListener('keydown', function EnterPress
     }
 });
 
+// Deleting all tasks
+document.querySelector('.addtaskBoxbutton').addEventListener('click', () => {
+
+    document.querySelector('.input-title').value = '';
+
+    document.querySelectorAll('.task-list').forEach(li => li.remove());
+
+    
+    saveTasks();
+});
+
+
 // Enable navigation between input fields using Enter
 const inputFields = document.querySelectorAll('input');
 inputFields.forEach((field, index) => {
